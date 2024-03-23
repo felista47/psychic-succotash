@@ -11,5 +11,7 @@ router.post('/', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
+app.get('/pesapal/ipn', (req, res) => {
+    res.send('<h1>Hello, this is the IPN page!</h1>'); // Send a simple HTML response
+});
 module.exports = router;

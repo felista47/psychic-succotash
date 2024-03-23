@@ -55,7 +55,7 @@ const submitOrder = async () => {
         const merchantReference = Math.floor(Math.random() * 1000000000000000000);
         const phone = "0745825378";
         const amount = 2.00;
-        const callbackUrl = "https://12eb-41-81-142-80.ngrok-free.app/pesapal/response-page.php";
+        const callbackUrl = "https://476d-41-89-227-171.ngrok-free.app/pesapal/response-page.php";
         const branch = "Manoti";
         const firstName = "Felista";
         const middleName = "Manoti";
