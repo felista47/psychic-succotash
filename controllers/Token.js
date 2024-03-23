@@ -38,6 +38,7 @@ const createToken = async (req, res, next) => {
         const responseData = response.data;
         const token = responseData.token;
         console.log("Token received:", token);
+        return token;
       })
       .catch((err) => {
         console.log('TOKEN ERROR',err);

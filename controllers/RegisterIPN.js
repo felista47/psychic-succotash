@@ -19,7 +19,7 @@ const headers = {
 };
 
 const data = {
-    "url": "https://12eb-41-81-142-80.ngrok-free.app/pesapal/pin.php",
+    "url": "https://b0b0-41-89-227-171.ngrok-free.app/ipn",
     "ipn_notification_type": "POST"
 };
 
