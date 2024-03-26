@@ -6,8 +6,8 @@ app.use(express.json());
 
 
 
-const RegisterIPN = require("./routes/RegisterIPN")
-app.use("/registerIPN", RegisterIPN);
+const paymentRoute= require("./routes/paymentRoute")
+app.use("/payment", paymentRoute);
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);

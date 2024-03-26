@@ -6,8 +6,6 @@ const createTokenAndRegisterIPN = async () => {
         "consumer_secret": "osGQ364R49cXKeOYSpaOnT++rHs="
     });
 
-    const ipnRegistrationUrl = "https://cybqa.pesapal.com/pesapalv3/api/URLSetup/RegisterIPN";
-
     try {
         // Create token request
         const tokenResponse = await axios.post("https://cybqa.pesapal.com/pesapalv3/api/Auth/RequestToken", data, {
@@ -20,9 +18,13 @@ const createTokenAndRegisterIPN = async () => {
         const tokenData = tokenResponse.data;
         const token = tokenData.token;
 
+console.log(token);
+
         // Register IPN request
+        const ipnRegistrationUrl = "https://cybqa.pesapal.com/pesapalv3/api/URLSetup/RegisterIPN";
+
         const ipnData = JSON.stringify({
-            "url": "https://476d-41-89-227-171.ngrok-free.app/ipn",
+            "url": " https://6f03-41-89-227-171.ngrok-free.app/ipn",
             "ipn_notification_type": "GET"
         });
 
@@ -49,13 +51,16 @@ const createTokenAndRegisterIPN = async () => {
     }
 };
 
-const submitOrder = async () => {
+
+
+
+const submitOrder = async (req,res,next) => {
     try {
         const { token, ipnId } = await createTokenAndRegisterIPN();
         const merchantReference = Math.floor(Math.random() * 1000000000000000000);
         const phone = "0745825378";
-        const amount = 2.00;
-        const callbackUrl = "https://476d-41-89-227-171.ngrok-free.app/pesapal/response-page.php";
+        const amount = 1.00;
+        const callbackUrl = " https://6f03-41-89-227-171.ngrok-free.app/payment/confirmation";
         const branch = "Manoti";
         const firstName = "Felista";
         const middleName = "Manoti";
@@ -95,6 +100,10 @@ const submitOrder = async () => {
         const response = await axios.post("https://cybqa.pesapal.com/pesapalv3/api/Transactions/SubmitOrderRequest", data, { headers });
         console.log("Order submission successful:");
         console.log(response.data);
+        // Operation b4 submitting response to client.
+        req.transactionID=response.data.order_tracking_id
+        req.token =token
+      next();
     } catch (error) {
         console.error("Error submitting order:", error.message);
         if (error.response) {
@@ -104,5 +113,42 @@ const submitOrder = async () => {
     }
 };
 
-submitOrder();
-module.exports = createTokenAndRegisterIPN;
+const confirmPayment =async (req,res)=>{
+console.log(req)
+console.log("Huray! We received some data")
+console.log(req.body);
+res.status(200);
+}
+
+
+
+const getTransactionStatus = async (req, res) => {
+    try {
+        console.log({
+            token:req.token,
+            trackingID:req.transactionID
+        })
+        const transactionID = req.transactionID
+        const response = await fetch(`https://cybqa.pesapal.com/pesapalv3/api/Transactions/GetTransactionStatus?orderTrackingId=${transactionID}`,
+        {
+            headers: {
+                "Authorization": `Bearer ${req.token}`
+            },
+            method: "GET",
+            redirect: "follow"
+
+        });
+
+       
+        const result = await response.text();
+        console.log(result)
+      } catch (error) {
+        console.error(error);
+      };
+}
+
+module.exports = {
+    submitOrder,
+    confirmPayment,
+    getTransactionStatus
+}
